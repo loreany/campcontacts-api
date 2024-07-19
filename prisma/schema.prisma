@@ -1,0 +1,72 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model Contacts {
+  id         Int           @id @default(autoincrement())
+  grupo      ContactsGroup @default(E)
+  nome       String        @db.VarChar(50)
+  endereco   String        @default("-") @db.VarChar(60)
+  bairro     String        @default("-") @db.VarChar(40)
+  latitude   String?       @default("-") @db.VarChar(16)
+  longitude  String?       @default("-") @db.VarChar(16)
+  fone       String        @default("0") @db.VarChar(11)
+  whatsapp   Boolean?      @default(false)
+  email      String        @default("-") @db.VarChar(40)
+  redeSocial String?       @default("-") @map("rede_social") @db.VarChar(40)
+  retorno    String        @default("-") @db.VarChar(30)
+  datacada   DateTime      @default(now()) @db.Timestamp(0)
+  usuario    String        @default("-") @db.VarChar(20)
+  obs        String?       @db.Text
+  area       String        @default("-") @db.Char(1)
+  status     Status        @default(S)
+  situacao   Situation     @default(A)
+  deletado   Boolean       @default(false)
+
+  @@map("contatos")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model Users {
+  id       Int    @id @default(autoincrement())
+  username String @unique(map: "username") @db.VarChar(20)
+  nome     String @db.VarChar(60)
+  grupo    Int    @default(0) @db.TinyInt
+  password String @db.VarChar(65)
+  obs      String @db.Text
+
+  @@map("user")
+}
+
+enum ContactsGroup {
+  E
+  L
+  C
+  S
+  V
+
+  @@map("contatos_grupo")
+}
+
+enum Status {
+  S
+  C
+  D
+  P
+
+  @@map("status")
+}
+
+enum Situation {
+  A
+  P
+  F
+
+  @@map("situacao")
+}
